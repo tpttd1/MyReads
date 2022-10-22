@@ -10,7 +10,7 @@ const AppRoute = () => {
     { path: "search", element: <Search /> },
   ]);
   return routes;
-}
+};
 
 const App = () => {
   return (
@@ -18,6 +18,6 @@ const App = () => {
       <AppRoute />
     </Router>
   );
-}
+};
 
 export default App;

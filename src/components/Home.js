@@ -1,52 +1,46 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { CURRENTLY_READING, READ, WANT_TO_READ } from "../utils/constants";
 import BookList from "./BookList";
+import { getAll } from "../API/BooksAPI";
 
 function Home() {
-  const navigate = useNavigate();
-  const [showSearchPage, setShowSearchPage] = useState(false);
+  const [read, setRead] = useState([]);
+  const [wantToRead, setWantToRead] = useState([]);
+  const [currentlyReading, setCurrentlyReading] = useState([]);
 
-  const onClick = () => {
-    // navigate('/search');
-  }
+  useEffect(() => {
+    let reads = [],
+      wantToReads = [],
+      currentlyReadings = [];
+
+    getAll().then((val) => {
+      val.forEach((d) => {
+        if (d.shelf === READ) reads.push(d);
+        else if (d.shelf === WANT_TO_READ) wantToReads.push(d);
+        else if (d.shelf === CURRENTLY_READING) currentlyReadings.push(d);
+      });
+
+      setRead(reads);
+      setWantToRead(wantToReads);
+      setCurrentlyReading(currentlyReadings);
+    });
+  }, []);
 
   return (
     <div className="app">
-      {showSearchPage ? (
-        <div className="search-books">
-          <div className="search-books-bar">
-            <a
-              className="close-search"
-              onClick={() => setShowSearchPage(!showSearchPage)}
-            >
-              Close
-            </a>
-            <div className="search-books-input-wrapper">
-              <input
-                type="text"
-                placeholder="Search by title, author, or ISBN"
-              />
-            </div>
-          </div>
-          <div className="search-books-results">
-            <ol className="books-grid"></ol>
-          </div>
+      <div className="list-books">
+        <div className="list-books-title">
+          <h1>MyReads</h1>
         </div>
-      ) : (
-        <div className="list-books">
-          <div className="list-books-title">
-            <h1 onClick={onClick}>MyReads</h1>
-          </div>
-          <div className="list-books-content">
-            <BookList title="Currently Reading" />
-            <BookList title="Want to Read" />
-            <BookList title="Read" />
-          </div>
-          <div className="open-search">
-            <a onClick={() => setShowSearchPage(!showSearchPage)}>Add a book</a>
-          </div>
+        <div className="list-books-content">
+          <BookList title="Currently Reading" data={currentlyReading} />
+          <BookList title="Want to Read" data={wantToRead} />
+          <BookList title="Read" data={read} />
         </div>
-      )}
+        <div className="open-search">
+          <a href="/search">Add a book</a>
+        </div>
+      </div>
     </div>
   );
 }
