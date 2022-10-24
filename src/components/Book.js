@@ -2,7 +2,7 @@ import React from "react";
 import { update } from "../API/BooksAPI";
 
 function Book(props) {
-  const { id, title, authors, imageLinks, shelf = '' } = props;
+  const { id, title, authors, imageLinks, shelf = 'none' } = props;
   const onChange = (e) => {
     const { value } = e.target;
     if (["wantToRead", "currentlyReading", "read"].includes(value)) {
