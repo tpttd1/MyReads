@@ -1,3 +1,4 @@
+import React from "react";
 import { update } from "../API/BooksAPI";
 
 function Book(props) {
@@ -42,4 +43,4 @@ function Book(props) {
   );
 }
 
-export default Book;
+export default React.memo(Book);
