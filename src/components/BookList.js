@@ -1,6 +1,6 @@
 import Book from "./Book";
 
-function BookList({ title, data }) {
+function BookList({ title, data, updateBook }) {
   return (
     <div className="bookshelf">
       <h2 className="bookshelf-title">{title}</h2>
@@ -9,7 +9,7 @@ function BookList({ title, data }) {
           {data.map((val) => {
             return (
               <li key={val.id}>
-                <Book {...val} />
+                <Book {...val} updateBook={updateBook} />
               </li>
             );
           })}

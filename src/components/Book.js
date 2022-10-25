@@ -2,14 +2,10 @@ import React from "react";
 import { update } from "../API/BooksAPI";
 
 function Book(props) {
-  const { id, title, authors, imageLinks, shelf } = props;
+  const { id, title, authors, imageLinks, shelf, updateBook } = props;
   const onChange = (e) => {
     const { value } = e.target;
-    if (["wantToRead", "currentlyReading", "read"].includes(value)) {
-      update({ id }, value).then(() => {
-        window.location.reload(false);
-      });
-    }
+    update({ id }, value).then(() => updateBook(id, value));
   };
 
   return (

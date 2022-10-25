@@ -1,7 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, useRoutes } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { CURRENTLY_READING, READ, WANT_TO_READ } from "../utils/constants";
 import { getAll } from "../API/BooksAPI";
 import Home from "./Home";
 import Search from "./Search";
@@ -16,29 +15,26 @@ const AppRoute = ({ props }) => {
 };
 
 const App = () => {
-  const [read, setRead] = useState([]);
-  const [wantToRead, setWantToRead] = useState([]);
-  const [currentlyReading, setCurrentlyReading] = useState([]);
+  const [data, setData] = useState([]);
+
+  const getData = () => {
+    getAll().then((val) => {
+      setData(val);
+    });
+  };
+
+  const updateBook = (id, shelf) => {
+    const book = data.filter((d) => d.id === id)[0];
+    book.shelf = shelf;
+    const bookList = data.map((d) => (d.id !== book.id ? d : book));
+    setData(bookList);
+  };
 
   useEffect(() => {
-    let reads = [],
-      wantToReads = [],
-      currentlyReadings = [];
-
-    getAll().then((val) => {
-      val.forEach((d) => {
-        if (d.shelf === READ) reads.push(d);
-        else if (d.shelf === WANT_TO_READ) wantToReads.push(d);
-        else if (d.shelf === CURRENTLY_READING) currentlyReadings.push(d);
-      });
-
-      setRead(reads);
-      setWantToRead(wantToReads);
-      setCurrentlyReading(currentlyReadings);
-    });
+    getData();
   }, []);
 
-  const props = { currentlyReading, wantToRead, read };
+  const props = { data, updateBook };
   return (
     <Router>
       <AppRoute props={props} />
