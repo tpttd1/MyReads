@@ -25,9 +25,13 @@ const App = () => {
 
   const updateBook = (id, shelf) => {
     const book = data.filter((d) => d.id === id)[0];
-    book.shelf = shelf;
-    const bookList = data.map((d) => (d.id !== book.id ? d : book));
-    setData(bookList);
+    if (book) {
+      book.shelf = shelf;
+      const bookList = data.map((d) => (d.id !== book.id ? d : book));
+      setData(bookList);
+    } else {
+      getData();
+    }
   };
 
   useEffect(() => {

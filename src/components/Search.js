@@ -4,10 +4,15 @@ import { search } from "../API/BooksAPI";
 import Book from "./Book";
 
 function Search({ props }) {
-  const { currentlyReading, wantToRead, read } = props;
   const [data, setData] = useState([]);
 
-  const allBooks = [...currentlyReading, ...wantToRead, ...read];
+  const handleChange = (id, shelf) => {
+    const book = data.filter((d) => d.id === id)[0];
+    book.shelf = shelf;
+    const bookList = data.map((d) => (d.id !== book.id ? d : book));
+    setData(bookList);
+    props.updateBook();
+  };
 
   const onChange = debounce((e) => {
     const { value } = e.target;
@@ -19,11 +24,11 @@ function Search({ props }) {
           });
 
           const compareData = data.map((d) => {
-            allBooks.forEach((b) => {
+            props.data.forEach((b) => {
               if (b.id === d.id) {
                 d.shelf = b.shelf;
               }
-            })
+            });
             return d;
           });
           setData(compareData);
@@ -55,7 +60,7 @@ function Search({ props }) {
           {data.map((val) => {
             return (
               <li key={val.id}>
-                <Book {...val} />
+                <Book {...val} updateBook={handleChange} />
               </li>
             );
           })}
