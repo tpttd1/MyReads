@@ -3,8 +3,12 @@ import debounce from "lodash/debounce";
 import { search } from "../API/BooksAPI";
 import Book from "./Book";
 
-function Search() {
+function Search({ props }) {
+  const { currentlyReading, wantToRead, read } = props;
   const [data, setData] = useState([]);
+
+  const allBooks = [...currentlyReading, ...wantToRead, ...read];
+
   const onChange = debounce((e) => {
     const { value } = e.target;
     if (value.length) {
@@ -13,7 +17,16 @@ function Search() {
           data.forEach((item, index) => {
             if (!item?.imageLinks) data.splice(index, 1);
           });
-          setData(data);
+
+          const compareData = data.map((d) => {
+            allBooks.forEach((b) => {
+              if (b.id === d.id) {
+                d.shelf = b.shelf;
+              }
+            })
+            return d;
+          });
+          setData(compareData);
         } else {
           setData([]);
         }

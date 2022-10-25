@@ -2,7 +2,7 @@ import React from "react";
 import { update } from "../API/BooksAPI";
 
 function Book(props) {
-  const { id, title, authors, imageLinks, shelf = 'none' } = props;
+  const { id, title, authors, imageLinks, shelf } = props;
   const onChange = (e) => {
     const { value } = e.target;
     if (["wantToRead", "currentlyReading", "read"].includes(value)) {
@@ -20,11 +20,11 @@ function Book(props) {
           style={{
             width: 128,
             height: 193,
-            backgroundImage: `url("${imageLinks?.thumbnail || ""}")`,
+            backgroundImage: `url("${imageLinks.thumbnail}")`,
           }}
         ></div>
         <div className="book-shelf-changer">
-          <select value={shelf} onChange={onChange}>
+          <select value={shelf || "none"} onChange={onChange}>
             <option value="disabled" disabled>
               Move to...
             </option>
@@ -37,7 +37,7 @@ function Book(props) {
       </div>
       <div className="book-title">{title}</div>
       <div className="book-authors">
-        {authors ? authors.map((aut) => `${aut} `) : ""}
+        {authors?.join(', ')}
       </div>
     </div>
   );
